@@ -43,3 +43,93 @@ func TestHandle(t *testing.T) {
 		t.Errorf("Expected custom header value 'Hello', got '%s'", rec.Header().Get("X-Custom-Header"))
 	}
 }
+
+func TestHandleWithMiddleware(t *testing.T) {
+	// Create a mock request and response for testing
+	req := httptest.NewRequest("GET", "/example", nil)
+	rec := httptest.NewRecorder()
+
+	// Define a middleware function that sets a custom header
+	middleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Perform middleware logic
+			// For example, set a custom header
+			w.Header().Set("X-Custom-Header", "Hello")
+			// Call the next handler in the chain
+			next.ServeHTTP(w, r)
+		})
+	}
+
+	// Define a handler function
+	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
+		// Assert that the middleware has been invoked
+		if header := w.Header().Get("X-Custom-Header"); header != "Hello" {
+			t.Errorf("Expected custom header value 'Hello', got '%s'", header)
+		}
+	}
+
+	// Create a handler using the handle function with the middleware
+	handler := handle(http.HandlerFunc(handlerFunc), []func(http.Handler) http.Handler{middleware})
+
+	// Serve the request using the handler
+	handler.ServeHTTP(rec, req)
+}
+
+func TestHandleWithMultipleMiddlewares(t *testing.T) {
+	// Create a mock request and response for testing
+	req := httptest.NewRequest("GET", "/example", nil)
+	rec := httptest.NewRecorder()
+
+	// Define the first middleware function that sets a custom header
+	middleware1 := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Perform middleware logic
+			// For example, set a custom header
+			w.Header().Set("X-Custom-Header1", "Hello")
+
+			w.Write([]byte("Middleware1 says hello! "))
+			// Call the next handler in the chain
+			next.ServeHTTP(w, r)
+		})
+	}
+
+	// Define the second middleware function that modifies the response body
+	middleware2 := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Perform middleware logic
+			// For example, modify the response body
+			w.Header().Set("X-Custom-Header2", "World")
+
+			w.Write([]byte("Middleware2 says world! "))
+			// Call the next handler in the chain
+			next.ServeHTTP(w, r)
+		})
+	}
+
+	// Define the handler function
+	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
+		// Assert that the first middleware has been invoked
+		if header := w.Header().Get("X-Custom-Header1"); header != "Hello" {
+			t.Errorf("Expected custom header value 'Hello', got '%s'", header)
+		}
+
+		// Assert that the second middleware has been invoked
+		if body := rec.Body.String(); body != "Middleware2 says world! Middleware1 says hello! " {
+			t.Errorf("Expected response body 'Middleware2 says world! Middleware1 says hello! ', got '%s'", body)
+		}
+
+		// Write the final response body
+		w.Write([]byte("Hello, World!"))
+	}
+
+	// Create a handler using the handle function with the middlewares
+	handler := handle(http.HandlerFunc(handlerFunc), []func(http.Handler) http.Handler{middleware1, middleware2})
+
+	// Serve the request using the handler
+	handler.ServeHTTP(rec, req)
+
+	// Assert the final response body
+	if body := rec.Body.String(); body != "Middleware2 says world! Middleware1 says hello! Hello, World!" {
+		t.Errorf("Expected response body 'Middleware2 says world! Middleware1 says hello! Hello, World!', got '%s'", body)
+	}
+}
