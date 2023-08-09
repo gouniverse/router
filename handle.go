@@ -1,6 +1,10 @@
 package router
 
-import "net/http"
+import (
+	"net/http"
+
+	"golang.org/x/exp/slices"
+)
 
 // handle applies a list of middlewares to an HTTP handler.
 //
@@ -20,6 +24,7 @@ import "net/http"
 //   - (http.Handler): The final transformed HTTP handler after applying
 //     all the middlewares.
 func handle(handler http.Handler, middlewares []func(http.Handler) http.Handler) http.Handler {
+	slices.Reverse(middlewares)
 	for _, middleware := range middlewares {
 		handler = middleware(handler)
 	}
