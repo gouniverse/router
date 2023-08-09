@@ -5,14 +5,14 @@ import (
 	"github.com/gouniverse/responses"
 )
 
-// Run is a function that takes a chi.Router and a slice of Route as input and sets up the routes on the chiRouter.
+// AddRoutesToChiRouter is a function that takes a chi.Router and a slice of Route as input and sets up the routes on the chiRouter.
 //
 // Parameters:
 // - chiRouter: The chi.Router to set up the routes on.
 // - routes: The slice of Route containing the routes to be set up.
 //
 // Return type: None.
-func Run(chiRouter chi.Router, routes []Route) {
+func AddRoutesToChiRouter(chiRouter chi.Router, routes []Route) {
 	for _, route := range routes {
 		if len(route.Methods) > 0 {
 			for _, method := range route.Methods {
