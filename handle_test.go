@@ -83,12 +83,7 @@ func TestHandleWithMultipleMiddlewares(t *testing.T) {
 	// Define the first middleware function that sets a custom header
 	middleware1 := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Perform middleware logic
-			// For example, set a custom header
-			w.Header().Set("X-Custom-Header1", "Hello")
-
-			w.Write([]byte("Middleware1 says hello! "))
-			// Call the next handler in the chain
+			w.Write([]byte("MiddlewareFirst"))
 			next.ServeHTTP(w, r)
 		})
 	}
@@ -96,26 +91,24 @@ func TestHandleWithMultipleMiddlewares(t *testing.T) {
 	// Define the second middleware function that modifies the response body
 	middleware2 := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Perform middleware logic
-			// For example, modify the response body
-			w.Header().Set("X-Custom-Header2", "World")
+			w.Write([]byte("MiddlewareSecond"))
+			next.ServeHTTP(w, r)
+		})
+	}
 
-			w.Write([]byte("Middleware2 says world! "))
-			// Call the next handler in the chain
+	// Define the second middleware function that modifies the response body
+	middleware3 := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("MiddlewareThird"))
 			next.ServeHTTP(w, r)
 		})
 	}
 
 	// Define the handler function
 	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
-		// Assert that the first middleware has been invoked
-		if header := w.Header().Get("X-Custom-Header1"); header != "Hello" {
-			t.Errorf("Expected custom header value 'Hello', got '%s'", header)
-		}
-
-		// Assert that the second middleware has been invoked
-		if body := rec.Body.String(); body != "Middleware2 says world! Middleware1 says hello! " {
-			t.Errorf("Expected response body 'Middleware2 says world! Middleware1 says hello! ', got '%s'", body)
+		// Assert that the middlewares have been invoked in the correct order
+		if body := rec.Body.String(); body != "MiddlewareFirstMiddlewareSecondMiddlewareThird" {
+			t.Errorf("Expected response body 'MiddlewareFirstMiddlewareSecondMiddlewareThird', got '%s'", body)
 		}
 
 		// Write the final response body
@@ -123,13 +116,17 @@ func TestHandleWithMultipleMiddlewares(t *testing.T) {
 	}
 
 	// Create a handler using the handle function with the middlewares
-	handler := handle(http.HandlerFunc(handlerFunc), []func(http.Handler) http.Handler{middleware1, middleware2})
+	handler := handle(http.HandlerFunc(handlerFunc), []func(http.Handler) http.Handler{
+		middleware1,
+		middleware2,
+		middleware3,
+	})
 
 	// Serve the request using the handler
 	handler.ServeHTTP(rec, req)
 
 	// Assert the final response body
-	if body := rec.Body.String(); body != "Middleware2 says world! Middleware1 says hello! Hello, World!" {
-		t.Errorf("Expected response body 'Middleware2 says world! Middleware1 says hello! Hello, World!', got '%s'", body)
+	if body := rec.Body.String(); body != "MiddlewareFirstMiddlewareSecondMiddlewareThirdHello, World!" {
+		t.Errorf("Expected response body 'MiddlewareFirstMiddlewareSecondMiddlewareThirdHello, World!', got '%s'", body)
 	}
 }
