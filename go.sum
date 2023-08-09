@@ -2,3 +2,5 @@ github.com/go-chi/chi/v5 v5.0.10 h1:rLz5avzKpjqxrYwXNfmjkrYYXOyLJd37pz53UFHC6vk=
 github.com/go-chi/chi/v5 v5.0.10/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
 github.com/gouniverse/responses v0.3.0 h1:VwGP0n0P79bGPbPin/aNS0Tdg/shm+jTjdpzc8QkE5g=
 github.com/gouniverse/responses v0.3.0/go.mod h1:hszJpLrEiH5Hvv4DPBHFQYL0aPxMNgpjmajqCLeI/vE=
+golang.org/x/exp v0.0.0-20230807204917-050eac23e9de h1:l5Za6utMv/HsBWWqzt4S8X17j+kt1uVETUX5UFhn2rE=
+golang.org/x/exp v0.0.0-20230807204917-050eac23e9de/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
