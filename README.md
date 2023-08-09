@@ -5,11 +5,16 @@
 A declarative router running on top of Chi.
 
 ## Why another router?
+
 Just to avoid several frustrations with the existing routers:
+
+- Routing declaraion should be clear, easy and concise without the extra bloat.
+
+- Routing should not be "obfuscated" behind the implementation. Declaration should be simple enough to understand without furter explanations.
 
 - The standard handlers in Go do not expect anything to be returned. As a result quite often an error is handled but a return statement is simply forgotten, and errors fall through. To avoid this common scenario, here the handlers expect a string to be returned.
 
-- Simplify declaring routes. Writing the HTTP method each time and is very repetitive, and usually not needed for most routes. Implicitly all routes respond to all HTTP verbs. Unless explicitly specified.
+- Simplify declaring routes. Writing the HTTP method each time and is very repetitive, and usually not needed for most endpoints. Implicitly all routes respond to all HTTP verbs. Unless explicitly specified.
 
 - Middlewares are defined for each route explicitly.
 
