@@ -6,7 +6,7 @@ A declarative router running on top of Chi.
 
 ## Why another router?
 
-Just to avoid several frustrations with the existing routers:
+Just to avoid several frustrations and multiple shortcomings with the existing routers:
 
 - Routing declaration should be clear, easy and concise without the extra bloat and cognitive load.
 
