@@ -18,6 +18,12 @@ Just to avoid several frustrations and multiple shortcomings with the existing r
 
 - Middlewares are defined for each route explicitly.
 
+- Easy to test.
+
+- Lightweight
+
+- Fast
+
 ## Installation
 
 ```sh
