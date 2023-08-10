@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func TestAddRoutesToChiRouter(t *testing.T) {
+func TestChiRouterAddRoutes(t *testing.T) {
 	// Create a new Chi router
 	router := chi.NewRouter()
 
@@ -26,7 +26,7 @@ func TestAddRoutesToChiRouter(t *testing.T) {
 	routes := []Route{route}
 
 	// Run the AddRoutesToChiRouter function
-	AddRoutesToChiRouter(router, routes)
+	chiRouterAddRoutes(router, routes)
 
 	// Create a mock request and response for testing
 	req := httptest.NewRequest("GET", "/example", nil)
@@ -74,7 +74,7 @@ func TestRunWithMiddleware(t *testing.T) {
 	routes := []Route{route}
 
 	// Run the AddRoutesToChiRouter function
-	AddRoutesToChiRouter(router, routes)
+	chiRouterAddRoutes(router, routes)
 
 	// Create a mock request and response for testing
 	req := httptest.NewRequest("GET", "/example", nil)
