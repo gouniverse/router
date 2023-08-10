@@ -51,12 +51,12 @@ routes = []router.Route{
     },
     // Example of route with local middlewares
     {
-        Path: "/form-submit",
+        Path: "/user/dashboard",
         Middlewares: []func(http.Handler) http.Handler{
-			middleware.CheckUserAuthenticated,
+		middleware.CheckUserAuthenticated,
         },
         Handler: func(w http.ResponseWriter, r *http.Request) string {
-            return "Form submitted"
+            return "Welcome to your dashboard"
         },
     },
     // Catch-all endpoint
