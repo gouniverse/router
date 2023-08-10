@@ -28,12 +28,32 @@ go get -u github.com/gouniverse/router
 
 ```go
 routes = []router.Route{
+    // Example of simple "Hello world" endpoint
     {
         Path: "/",
         Handler: func(w http.ResponseWriter, r *http.Request) string {
             return "Hello world"
         },
     },
+    // Example of POST route
+    {
+        Path: "/form-submit",
+        Methods: [http.methodPost]
+        Handler: func(w http.ResponseWriter, r *http.Request) string {
+            return "Form submitted"
+        },
+    },
+    // Example of route with local middlewares
+    {
+        Path: "/form-submit",
+        Middlewares: []func(http.Handler) http.Handler{
+			middleware.CheckUserAuthenticated,
+        },
+        Handler: func(w http.ResponseWriter, r *http.Request) string {
+            return "Form submitted"
+        },
+    },
+    // Catch-all endpoint
     {
         Path: "/*",
         Handler: func(w http.ResponseWriter, r *http.Request) string {
