@@ -12,7 +12,7 @@ func TestRoute(t *testing.T) {
 		Handler: func(w http.ResponseWriter, r *http.Request) string {
 			return "Hello, World!"
 		},
-		Middlewares: []func(http.Handler) http.Handler{},
+		Middlewares: []Middleware{},
 	}
 
 	if route.Path != "/example" {

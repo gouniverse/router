@@ -19,7 +19,7 @@ func TestChiRouterAddRoutes(t *testing.T) {
 		Handler: func(w http.ResponseWriter, r *http.Request) string {
 			return "Hello, World!"
 		},
-		Middlewares: []func(http.Handler) http.Handler{},
+		Middlewares: []Middleware{},
 	}
 
 	// Create a slice of routes
@@ -47,13 +47,15 @@ func TestRunWithMiddleware(t *testing.T) {
 	router := chi.NewRouter()
 
 	// Define a mock middleware function that modifies the response
-	middleware := func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Modify the response by setting a custom header
-			w.Header().Set("X-Middleware", "Invoked")
-			// Call the next handler in the chain
-			next.ServeHTTP(w, r)
-		})
+	middleware := Middleware{
+		Handler: func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				// Modify the response by setting a custom header
+				w.Header().Set("X-Middleware", "Invoked")
+				// Call the next handler in the chain
+				next.ServeHTTP(w, r)
+			})
+		},
 	}
 
 	// Define a sample route
@@ -67,7 +69,7 @@ func TestRunWithMiddleware(t *testing.T) {
 			}
 			return "Hello, World!"
 		},
-		Middlewares: []func(http.Handler) http.Handler{middleware},
+		Middlewares: []Middleware{middleware},
 	}
 
 	// Create a slice of routes

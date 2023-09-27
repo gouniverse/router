@@ -6,7 +6,8 @@ import (
 
 type Route struct {
 	Path        string
-	Methods     []string
+	Methods     []string // optional, default all methods
 	Handler     func(w http.ResponseWriter, r *http.Request) string
-	Middlewares []func(http.Handler) http.Handler
+	Middlewares []Middleware
+	Name        string // optional, default empty string
 }

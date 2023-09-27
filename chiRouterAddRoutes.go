@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/gouniverse/responses"
 )
@@ -16,16 +18,21 @@ import (
 // - Nothing
 func chiRouterAddRoutes(chiRouter chi.Router, routes []Route) {
 	for _, route := range routes {
+		middlewares := []func(http.Handler) http.Handler{}
+		for _, middleware := range route.Middlewares {
+			middlewares = append(middlewares, middleware.Handler)
+		}
+
 		if len(route.Methods) > 0 {
 			for _, method := range route.Methods {
 				if method == "all" {
-					chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), route.Middlewares))
+					chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
 				} else {
-					chiRouter.Method(method, route.Path, handle(responses.HTMLHandler(route.Handler), route.Middlewares))
+					chiRouter.Method(method, route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
 				}
 			}
 		} else {
-			chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), route.Middlewares))
+			chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
 		}
 	}
 }
