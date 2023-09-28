@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,7 +13,7 @@ import (
 //
 // Returns:
 // - chi.Mux: The newly created chi router.
-func NewChiRouter(globalMiddlewares []func(http.Handler) http.Handler, routes []Route) *chi.Mux {
+func NewChiRouter(globalMiddlewares []Middleware, routes []Route) *chi.Mux {
 	chiRouter := chi.NewRouter()
 	chiRouterAddMiddlewares(chiRouter, globalMiddlewares)
 	chiRouterAddRoutes(chiRouter, routes)

@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,8 +13,8 @@ import (
 //
 // Returns:
 // - Nothing
-func chiRouterAddMiddlewares(chiRouter chi.Router, middlewares []func(http.Handler) http.Handler) {
+func chiRouterAddMiddlewares(chiRouter chi.Router, middlewares []Middleware) {
 	for _, middleware := range middlewares {
-		chiRouter.Use(middleware)
+		chiRouter.Use(middleware.Handler)
 	}
 }
