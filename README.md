@@ -84,16 +84,56 @@ routes = []router.Route{
 
 ```go
 // 1. Prepare your global middleware
-globalMiddlewares := []func(http.Handler) http.Handler{
-    middleware.Compress(5, "text/html", "text/css"),
-    middleware.GetHead,
-    middleware.CleanPath,
-    middleware.RedirectSlashes,
-    middleware.Timeout(time.Second * 30),
-    httprate.LimitByIP(20, 1*time.Second),  // 20 req per second
-    httprate.LimitByIP(180, 1*time.Minute), // 180 req per minute
-    httprate.LimitByIP(12000, 1*time.Hour), // 12000 req hour
-}
+globalMiddlewares := []Middleware{}
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "Compress",
+    Handler: middleware.Compress(5, "text/html", "text/css"),
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "GetHead",
+    Handler: middleware.GetHead,
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "CleanPath",
+    Handler: middleware.CleanPath,
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "RedirectSlashes",
+    Handler: middleware.RedirectSlashes,
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "Timeout",
+    Handler: middleware.Timeout(time.Second * 30),
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "RateLimit 1/second",
+    Handler: httprate.LimitByIP(20, 1*time.Second),
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "RateLimit 1/minute",
+    Handler: httprate.LimitByIP(180, 1*time.Minute),
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "RateLimit 1/hour",
+    Handler: httprate.LimitByIP(12000, 1*time.Hour),
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "Logger",
+    Handler: middleware.Logger,
+})
+
+globalMiddlewares = append(globalMiddlewares, router.Middleware{
+    Name:    "Recoverer",
+    Handler: middleware.Recoverer,
+})
 
 // 2. Prepare your routes
 routes := []router.Route{}
