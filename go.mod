@@ -8,8 +8,11 @@ require (
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 )
 
+require github.com/cespare/xxhash/v2 v2.2.0 // indirect
+
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
+	github.com/go-chi/httprate v0.7.4
 	github.com/go-openapi/errors v0.20.4 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible

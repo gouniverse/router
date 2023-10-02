@@ -84,55 +84,27 @@ routes = []router.Route{
 
 ```go
 // 1. Prepare your global middleware
-globalMiddlewares := []Middleware{}
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "Compress",
-    Handler: middleware.Compress(5, "text/html", "text/css"),
-})
+globalMiddlewares := []Middleware{
+    NewCompressMiddleware(5, "text/html", "text/css"),
+    NewGetHeadMiddleware(),
+    NewCleanPathMiddleware(),
+    NewRedirectSlashesMiddleware(),
+    NewTimeoutMiddleware(30),
+    NewLimitByIpMiddleware(20, 1),       // 20 req per second
+	NewLimitByIpMiddleware(180, 60),     // 180 req per minute
+	NewLimitByIpMiddleware(12000, 3600), // 12000 req hour
+}
+
+if config.AppEnvironment != config.APP_ENVIRONMENT_TESTING {
+	globalMiddlewares = append(globalMiddlewares, NewLoggerMiddleware())
+	globalMiddlewares = append(globalMiddlewares, NewRecovererMiddleware())
+}
 
 globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "GetHead",
-    Handler: middleware.GetHead,
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "CleanPath",
-    Handler: middleware.CleanPath,
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "RedirectSlashes",
-    Handler: middleware.RedirectSlashes,
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "Timeout",
-    Handler: middleware.Timeout(time.Second * 30),
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "RateLimit 1/second",
-    Handler: httprate.LimitByIP(20, 1*time.Second),
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "RateLimit 1/minute",
-    Handler: httprate.LimitByIP(180, 1*time.Minute),
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "RateLimit 1/hour",
-    Handler: httprate.LimitByIP(12000, 1*time.Hour),
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "Logger",
-    Handler: middleware.Logger,
-})
-
-globalMiddlewares = append(globalMiddlewares, router.Middleware{
-    Name:    "Recoverer",
-    Handler: middleware.Recoverer,
+    Name:    "My Custom Middleware",
+    Handler: func (next http.Handler) http.Handler {
+        // My custom implementation here
+    },
 })
 
 // 2. Prepare your routes
@@ -178,7 +150,11 @@ router.RoutesPrependMiddlewares(userRouters, []func(http.Handler) http.Handler{
 
 This router allows you to list routes for easy preview
 
+```golang
+router.List(globalMiddlewares, routes)
 ```
+
+```sh
 +------------------------------------+
 | GLOBAL MIDDLEWARE LIST (TOTAL: 2)  |
 +---+--------------------------------+
