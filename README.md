@@ -95,11 +95,13 @@ globalMiddlewares := []Middleware{
 	NewLimitByIpMiddleware(12000, 3600), // 12000 req hour
 }
 
+// 1.1. Example skipping middlewares while testing
 if config.AppEnvironment != config.APP_ENVIRONMENT_TESTING {
 	globalMiddlewares = append(globalMiddlewares, NewLoggerMiddleware())
 	globalMiddlewares = append(globalMiddlewares, NewRecovererMiddleware())
 }
 
+// 1.2. Example of declaring custom middleware (on the fly)
 globalMiddlewares = append(globalMiddlewares, router.Middleware{
     Name:    "My Custom Middleware",
     Handler: func (next http.Handler) http.Handler {
