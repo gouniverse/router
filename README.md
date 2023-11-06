@@ -35,8 +35,8 @@ go get -u github.com/gouniverse/router
 ## Example Routes
 
 ```go
-checkUserUnauthenticatedMiddleware := Middleware{
-    Name: "Check if User is Unauthenticated"
+checkUserAuthenticatedMiddleware := Middleware{
+    Name: "Check if User is Authenticated"
     Handler: middleware.CheckUserAuthenticated,
 }
 
@@ -63,7 +63,7 @@ routes = []router.Route{
         Name: "User Dashboard",
         Path: "/user/dashboard",
         Middlewares: []Middleware{
-		    checkUserUnauthenticatedMiddleware,
+			checkUserAuthenticatedMiddleware,
         },
         Handler: func(w http.ResponseWriter, r *http.Request) string {
             return "Welcome to your dashboard"
