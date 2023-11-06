@@ -18,13 +18,13 @@ Just to avoid several frustrations and multiple shortcomings with the existing r
 
 - Middlewares are defined for each route explicitly.
 
-- Easy to test.
+- List routes in table format, with path, name and middlewares applicable
 
-- Lightweight
+- Easy to test. By returning a string, routes are easy to test on their own by calling them directly.
 
-- Fast
+- Lightweight, should not add extra fluff
 
-- List and Preview at a glance
+- Fast, should not slow down the application unnecessarily
 
 ## Installation
 
