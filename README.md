@@ -24,7 +24,7 @@ Just to avoid several frustrations and multiple shortcomings with the existing r
 
 - Fast
 
-- List
+- List and Preview at a glance
 
 ## Installation
 
