@@ -127,10 +127,10 @@ a path to the beginning of a group of routes
 
 ```go
 // Prepend /user to the path of the user routes
-userRoutes = router.RoutesPrependPath(userRouters, "/user")
+userRoutes = router.RoutesPrependPath(userRoutes, "/user")
 
 // Prepend /admin to the path of the admin routes
-adminRoutes = router.RoutesPrependPath(adminRouters, "/admin")
+adminRoutes = router.RoutesPrependPath(adminRoutes, "/admin")
 ```
 
 ## Example Applying Middleware to Multiple Routes
