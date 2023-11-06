@@ -20,7 +20,7 @@ Just to avoid several frustrations and multiple shortcomings with the existing r
 
 - List routes in table format, with path, name and middlewares applicable
 
-- Easy to test. By returning a string, routes are easy to test on their own by calling them directly.
+- Easy to test. By returning a string, most routes are easy to test on their own by calling them directly and inspecting the output.
 
 - Lightweight, should not add extra fluff
 
