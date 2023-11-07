@@ -6,7 +6,7 @@ A declarative router running on top of Chi.
 
 ## Why another router?
 
-Just to avoid several frustrations and multiple shortcomings with the existing routers:
+After checking the existing routers, all of them came short from what we expect a router to be:
 
 - Routing declaration should be clear, easy and concise without the extra bloat and cognitive load.
 
@@ -31,6 +31,37 @@ Just to avoid several frustrations and multiple shortcomings with the existing r
 ```sh
 go get -u github.com/gouniverse/router
 ```
+
+## Listing Routes
+
+This router allows you to list routes for easy preview
+
+```golang
+router.List(globalMiddlewares, routes)
+```
+
+```sh
++------------------------------------+
+| GLOBAL MIDDLEWARE LIST (TOTAL: 2)  |
++---+--------------------------------+
+| # | MIDDLEWARE NAME                |
++---+--------------------------------+
+| 1 | Append JWT Token               |
+| 2 | Append Session Cookies         |
++---+--------------------------------+
++-------------------------------------------------------------------------------------------------+
+| ROUTES LIST (TOTAL: 5)                                                                          |
++---+-----------------+------------+---------------------------+----------------------------------+
+| # | ROUTE PATH      | METHODS    | ROUTE NAME                | MIDDLEWARE NAME LIST             |
++---+-----------------+------------+---------------------------+----------------------------------+
+| 1 | /               | [ALL]      | Home                      | [Web Middleware]                 |
+| 2 | /example        | [GET POST] | Example                   | [Web Middleware]                 |
+| 3 | /api/form-submit| [POST]     | Submit Form               | [API Middleware, Verify Form]    |
+| 4 | /user/dashboard | [ALL]      | User Dashboard            | [Check if User is Authenticated] |
+| 5 | /*              | [ALL]      | Catch All. Page Not Found | []                               |
++---+-----------------+------------+---------------------------+----------------------------------+
+```
+
 
 ## Example Routes
 
@@ -146,34 +177,4 @@ the beginning and will be called first, before the ones already defined
 router.RoutesPrependMiddlewares(userRouters, []func(http.Handler) http.Handler{
     middleware.CheckUserAuthenticated,
 })
-```
-
-## Listing Routes
-
-This router allows you to list routes for easy preview
-
-```golang
-router.List(globalMiddlewares, routes)
-```
-
-```sh
-+------------------------------------+
-| GLOBAL MIDDLEWARE LIST (TOTAL: 2)  |
-+---+--------------------------------+
-| # | MIDDLEWARE NAME                |
-+---+--------------------------------+
-| 1 | Append JWT Token               |
-| 2 | Append Session Cookies         |
-+---+--------------------------------+
-+-------------------------------------------------------------------------------------------------+
-| ROUTES LIST (TOTAL: 5)                                                                          |
-+---+-----------------+------------+---------------------------+----------------------------------+
-| # | ROUTE PATH      | METHODS    | ROUTE NAME                | MIDDLEWARE NAME LIST             |
-+---+-----------------+------------+---------------------------+----------------------------------+
-| 1 | /               | [ALL]      | Home                      | [Web Middleware]                 |
-| 2 | /example        | [GET POST] | Example                   | [Web Middleware]                 |
-| 3 | /api/form-submit| [POST]     | Submit Form               | [API Middleware, Verify Form]    |
-| 4 | /user/dashboard | [ALL]      | User Dashboard            | [Check if User is Authenticated] |
-| 5 | /*              | [ALL]      | Catch All. Page Not Found | []                               |
-+---+-----------------+------------+---------------------------+----------------------------------+
 ```
