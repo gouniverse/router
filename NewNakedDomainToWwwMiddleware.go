@@ -7,10 +7,14 @@ import (
 )
 
 // NewNakedDomainToWwwMiddleware will redirect a "www" subdomain to naked (non-www) domain
-func NewNakedDomainToWwwMiddleware() Middleware {
+func NewNakedDomainToWwwMiddleware(hostExcludes []string) Middleware {
 	m := Middleware{
-		Name:    "Naked Domain to WWW Middleware",
-		Handler: nakedDomainToWww,
+		Name: "Naked Domain to WWW Middleware",
+		Handler: func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				nakedDomainToWww(next, hostExcludes)
+			})
+		},
 	}
 
 	return m
@@ -18,13 +22,9 @@ func NewNakedDomainToWwwMiddleware() Middleware {
 
 // NakedDomainToWWW is http middleware that ensures a naked domain is redirected to "www" subdomain and "https".
 // `hostExcludes` is a list of host names to ignore, such as `localhost`.
-func nakedDomainToWww(next http.Handler /*, hostExcludes []string*/) http.Handler {
+func nakedDomainToWww(next http.Handler, hostExcludes []string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		host := strings.ToLower(r.Host)
-
-		hostExcludes := []string{
-			"localhost",
-		}
 
 		redirect := true
 		if strings.HasPrefix(host, "www") {
