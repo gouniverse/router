@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -146,6 +147,56 @@ func TestNewRouterWithGlobalMiddleware(t *testing.T) {
 	expectedBody := "Hello, World!"
 	if rec.Body.String() != expectedBody {
 		t.Errorf("Expected body '%s', got '%s'", expectedBody, rec.Body.String())
+	}
+
+}
+
+// Add a new table test for the above
+
+func TestNewRouterFull(t *testing.T) {
+	table := []struct {
+		Methods      []string
+		Path         string
+		ResponseCode int
+		ExpectedBody string
+	}{
+		{Path: "/", ResponseCode: http.StatusNotFound, ExpectedBody: "404 page not found"},
+		{Path: "/example", ResponseCode: http.StatusOK, ExpectedBody: "Hello, World!"},
+		{Path: "/nonexisting", ResponseCode: http.StatusNotFound, ExpectedBody: "404 page not found"},
+	}
+
+	// Create a new router
+	router := NewRouter([]Middleware{}, []Route{
+		{
+			Path:    "/example",
+			Methods: []string{"GET"},
+			Handler: func(w http.ResponseWriter, r *http.Request) string {
+				return "Hello, World!"
+			},
+			Middlewares: []Middleware{},
+		},
+	})
+
+	for _, testRow := range table {
+
+		// Create a mock request and response for testing
+		req := httptest.NewRequest("GET", testRow.Path, nil)
+		rec := httptest.NewRecorder()
+
+		// Serve the request using the router
+		router.ServeHTTP(rec, req)
+
+		// Assert the response status code
+		if rec.Result().StatusCode != testRow.ResponseCode {
+			t.Errorf("Expected status code %d, got %d", testRow.ResponseCode, rec.Result().StatusCode)
+		}
+
+		// Assert the response body
+		expectedBody := testRow.ExpectedBody
+		if strings.TrimSpace(rec.Body.String()) != expectedBody {
+			t.Errorf("Expected body '%s', got '%s'", expectedBody, strings.TrimSpace(rec.Body.String()))
+		}
+
 	}
 
 }
