@@ -3,10 +3,10 @@ module github.com/gouniverse/router
 go 1.22
 
 require (
-	github.com/go-chi/chi/v5 v5.0.12
+	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/cors v1.2.1
 	github.com/gouniverse/responses v0.6.0
-	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
 )
 
 require (
@@ -24,6 +24,6 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	go.mongodb.org/mongo-driver v1.15.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	go.mongodb.org/mongo-driver v1.16.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
 )
