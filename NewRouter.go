@@ -22,15 +22,22 @@ func NewRouter(globalMiddlewares []Middleware, routes []Route) *http.ServeMux {
 		route.Middlewares = append(globalMiddlewares, route.Middlewares...)
 
 		middlewareHandlers := []func(http.Handler) http.Handler{}
-		// for _, middleware := range globalMiddlewares {
-		// 	middlewareHandlers = append(middlewareHandlers, middleware.Handler)
-		// }
 
 		for _, middleware := range route.Middlewares {
 			middlewareHandlers = append(middlewareHandlers, middleware.Handler)
 		}
 
-		mux.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+		if len(route.Methods) > 0 {
+			for _, method := range route.Methods {
+				if method == "all" {
+					mux.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+				} else {
+					mux.Handle(method+" "+route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+				}
+			}
+		} else {
+			mux.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+		}
 	}
 
 	return mux
