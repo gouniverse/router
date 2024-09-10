@@ -12,7 +12,7 @@ func NewNakedDomainToWwwMiddleware(hostExcludes []string) Middleware {
 		Name: "Naked Domain to WWW Middleware",
 		Handler: func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				nakedDomainToWww(next, hostExcludes)
+				nakedDomainToWww(next, hostExcludes).ServeHTTP(w, r)
 			})
 		},
 	}
@@ -26,21 +26,31 @@ func nakedDomainToWww(next http.Handler, hostExcludes []string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		host := strings.ToLower(r.Host)
 
-		redirect := true
-		if strings.HasPrefix(host, "www") {
-			redirect = false
-		} else {
-			for _, v := range hostExcludes {
-				if strings.HasPrefix(host, v) {
-					redirect = false
-				}
+		if len(host) == 0 {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		scheme := "https"
+
+		if r.TLS != nil {
+			scheme = "http"
+		}
+
+		redirectUrl := fmt.Sprintf(scheme+"://www.%s%s", r.Host, r.URL.Path)
+
+		if strings.HasPrefix(host, "www.") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		for _, v := range hostExcludes {
+			if strings.HasPrefix(host, v) {
+				next.ServeHTTP(w, r)
+				return
 			}
 		}
 
-		if redirect {
-			http.Redirect(w, r, fmt.Sprintf("https://www.%s%s", r.Host, r.URL.Path), http.StatusPermanentRedirect)
-			return
-		}
-		next.ServeHTTP(w, r)
+		http.Redirect(w, r, redirectUrl, http.StatusPermanentRedirect)
 	})
 }

@@ -19,4 +19,19 @@ func TestRoute(t *testing.T) {
 		t.Errorf("Expected path to be '/example', got '%s'", route.Path)
 	}
 
+	if len(route.Methods) != 1 {
+		t.Errorf("Expected methods to be 1, got %d", len(route.Methods))
+	}
+
+	if route.Methods[0] != "GET" {
+		t.Errorf("Expected method to be 'GET', got '%s'", route.Methods[0])
+	}
+
+	if route.Handler == nil {
+		t.Error("Expected handler to be non-nil")
+	}
+
+	if len(route.Middlewares) != 0 {
+		t.Error("Expected middlewares to be empty")
+	}
 }
