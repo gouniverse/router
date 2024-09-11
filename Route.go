@@ -5,6 +5,7 @@ import (
 )
 
 type Route struct {
+	// Domain      string
 	Path        string
 	Methods     []string // optional, default all methods
 	Handler     func(w http.ResponseWriter, r *http.Request) string

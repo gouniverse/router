@@ -14,7 +14,7 @@ import (
 // - routes: A slice of Route structs that define the routes for the router.
 //
 // Returns:
-// - chi.Mux: The newly created chi router.
+// - http.ServeMux: The newly created router.
 func NewRouter(globalMiddlewares []Middleware, routes []Route) *http.ServeMux {
 	mux := http.NewServeMux()
 
