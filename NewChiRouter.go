@@ -13,7 +13,7 @@ import (
 //
 // Returns:
 // - chi.Mux: The newly created chi router.
-func NewChiRouter(globalMiddlewares []Middleware, routes []Route) *chi.Mux {
+func NewChiRouter(globalMiddlewares []Middleware, routes []RouteInterface) *chi.Mux {
 	chiRouter := chi.NewRouter()
 	chiRouterAddMiddlewares(chiRouter, globalMiddlewares)
 	chiRouterAddRoutes(chiRouter, routes)

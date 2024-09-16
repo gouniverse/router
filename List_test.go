@@ -25,47 +25,47 @@ func TestList(t *testing.T) {
 		Name: "global_middleware1",
 	}
 
-	routes := []Route{
+	routes := []RouteInterface{
 		// Example of simple "Hello world" endpoint
-		{
+		&Route{
 			Name: "Home",
 			Path: "/",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello world"
 			},
 			Middlewares: []Middleware{middleware1},
 		},
-		{
+		&Route{
 			Name:    "Example",
 			Path:    "/example",
 			Methods: []string{http.MethodGet, http.MethodPost},
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello, World!"
 			},
 			Middlewares: []Middleware{middleware1, middleware2},
 		},
 		// Example of POST route
-		{
+		&Route{
 			Name:    "Submit Form",
 			Path:    "/form-submit",
 			Methods: []string{http.MethodPost},
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Form submitted"
 			},
 		},
 		// Example of route with local middlewares
-		{
+		&Route{
 			Name:        "User Dashboard",
 			Path:        "/user/dashboard",
 			Middlewares: []Middleware{checkUserAuthenticatedMiddleware},
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Welcome to your dashboard"
 			},
 		},
-		{
+		&Route{
 			Name: "Catch All. Page Not Found",
 			Path: "/*",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Page not found"
 			},
 		},

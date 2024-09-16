@@ -16,14 +16,14 @@ func TestChiRouterAddRoutes(t *testing.T) {
 	route := Route{
 		Path:    "/example",
 		Methods: []string{"GET"},
-		Handler: func(w http.ResponseWriter, r *http.Request) string {
+		HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 			return "Hello, World!"
 		},
 		Middlewares: []Middleware{},
 	}
 
 	// Create a slice of routes
-	routes := []Route{route}
+	routes := []RouteInterface{&route}
 
 	// Run the AddRoutesToChiRouter function
 	chiRouterAddRoutes(router, routes)
@@ -62,7 +62,7 @@ func TestRunWithMiddleware(t *testing.T) {
 	route := Route{
 		Path:    "/example",
 		Methods: []string{"GET"},
-		Handler: func(w http.ResponseWriter, r *http.Request) string {
+		HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 			// Assert that the middleware has been invoked
 			if header := w.Header().Get("X-Middleware"); header != "Invoked" {
 				t.Errorf("Expected custom header value 'Invoked', got '%s'", header)
@@ -73,7 +73,7 @@ func TestRunWithMiddleware(t *testing.T) {
 	}
 
 	// Create a slice of routes
-	routes := []Route{route}
+	routes := []RouteInterface{&route}
 
 	// Run the AddRoutesToChiRouter function
 	chiRouterAddRoutes(router, routes)

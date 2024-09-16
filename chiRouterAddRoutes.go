@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/gouniverse/responses"
 )
 
 // chiRouterAddRoutes is a function that takes a chi.Router and a slice of Routes
@@ -16,23 +15,19 @@ import (
 //
 // Returns:
 // - Nothing
-func chiRouterAddRoutes(chiRouter chi.Router, routes []Route) {
+func chiRouterAddRoutes(chiRouter chi.Router, routes []RouteInterface) {
 	for _, route := range routes {
 		middlewares := []func(http.Handler) http.Handler{}
-		for _, middleware := range route.Middlewares {
+		for _, middleware := range route.GetMiddlewares() {
 			middlewares = append(middlewares, middleware.Handler)
 		}
 
-		if len(route.Methods) > 0 {
-			for _, method := range route.Methods {
-				if method == "all" {
-					chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
-				} else {
-					chiRouter.Method(method, route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
-				}
+		if len(route.GetMethods()) > 0 {
+			for _, method := range route.GetMethods() {
+				chiRouter.Method(method, route.GetPath(), handleFunc(route.GetHandler(), middlewares))
 			}
 		} else {
-			chiRouter.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewares))
+			chiRouter.Handle(route.GetPath(), handleFunc(route.GetHandler(), middlewares))
 		}
 	}
 }

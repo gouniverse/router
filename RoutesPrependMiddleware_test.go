@@ -6,16 +6,16 @@ import (
 )
 
 func TestRoutesPrependMiddleware(t *testing.T) {
-	routes := []Route{
-		{
+	routes := []RouteInterface{
+		&Route{
 			Path: "/route1",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello, World 1!"
 			},
 		},
-		{
+		&Route{
 			Path: "/route2",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello, World 2!"
 			},
 		},
@@ -36,16 +36,16 @@ func TestRoutesPrependMiddleware(t *testing.T) {
 	}
 
 	for _, route := range routes {
-		if len(route.Middlewares) != 2 {
-			t.Error("Expected route middleware length to be 2, got", len(routes[0].Middlewares))
+		if len(route.GetMiddlewares()) != 2 {
+			t.Error("Expected route middleware length to be 2, got", len(routes[0].GetMiddlewares()))
 		}
 
-		if route.Middlewares[0].Name != "Middleware 1" {
-			t.Error("Expected route middleware 1 name to be Middleware 1, got", route.Middlewares[0].Name)
+		if route.GetMiddlewares()[0].Name != "Middleware 1" {
+			t.Error("Expected route middleware 1 name to be Middleware 1, got", route.GetMiddlewares()[0].Name)
 		}
 
-		if route.Middlewares[1].Name != "Middleware 2" {
-			t.Error("Expected route middleware 2 name to be Middleware 2, got", route.Middlewares[1].Name)
+		if route.GetMiddlewares()[1].Name != "Middleware 2" {
+			t.Error("Expected route middleware 2 name to be Middleware 2, got", route.GetMiddlewares()[1].Name)
 		}
 	}
 
@@ -60,24 +60,24 @@ func TestRoutesPrependMiddleware(t *testing.T) {
 	})
 
 	for _, route := range routes {
-		if len(route.Middlewares) != 4 {
-			t.Error("Expected route middleware length to be 4, got", len(routes[0].Middlewares))
+		if len(route.GetMiddlewares()) != 4 {
+			t.Error("Expected route middleware length to be 4, got", len(routes[0].GetMiddlewares()))
 		}
 
-		if route.Middlewares[0].Name != "Middleware 3" {
-			t.Error("Expected route middleware 1 name to be Middleware 3, got", route.Middlewares[0].Name)
+		if route.GetMiddlewares()[0].Name != "Middleware 3" {
+			t.Error("Expected route middleware 1 name to be Middleware 3, got", route.GetMiddlewares()[0].Name)
 		}
 
-		if route.Middlewares[1].Name != "Middleware 4" {
-			t.Error("Expected route middleware 2 name to be Middleware 4, got", route.Middlewares[1].Name)
+		if route.GetMiddlewares()[1].Name != "Middleware 4" {
+			t.Error("Expected route middleware 2 name to be Middleware 4, got", route.GetMiddlewares()[1].Name)
 		}
 
-		if route.Middlewares[2].Name != "Middleware 1" {
-			t.Error("Expected route middleware 3 name to be Middleware 1, got", route.Middlewares[2].Name)
+		if route.GetMiddlewares()[2].Name != "Middleware 1" {
+			t.Error("Expected route middleware 3 name to be Middleware 1, got", route.GetMiddlewares()[2].Name)
 		}
 
-		if route.Middlewares[3].Name != "Middleware 2" {
-			t.Error("Expected route middleware 4 name to be Middleware 2, got", route.Middlewares[3].Name)
+		if route.GetMiddlewares()[3].Name != "Middleware 2" {
+			t.Error("Expected route middleware 4 name to be Middleware 2, got", route.GetMiddlewares()[3].Name)
 		}
 	}
 }

@@ -6,16 +6,19 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
-func List(globalMiddlewares []Middleware, routes []Route) {
+func List(globalMiddlewares []Middleware, routes []RouteInterface) {
 	tableRouteRows := []table.Row{}
 	for index, route := range routes {
-		methods := route.Methods
-		middlewares := route.Middlewares
+		methods := route.GetMethods()
+		middlewares := route.GetMiddlewares()
 		if len(methods) < 1 {
 			methods = []string{"ALL"}
 		}
-		path := route.Path
-		name := route.Name
+		if len(methods) == 6 {
+			methods = []string{"ALL"}
+		}
+		path := route.GetPath()
+		name := route.GetName()
 		middlewareNames := []string{}
 		for _, middleware := range middlewares {
 			middlewareName := middleware.Name

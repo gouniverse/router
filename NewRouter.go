@@ -30,13 +30,13 @@ func NewRouter(globalMiddlewares []Middleware, routes []Route) *http.ServeMux {
 		if len(route.Methods) > 0 {
 			for _, method := range route.Methods {
 				if method == "all" {
-					mux.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+					mux.Handle(route.Path, handle(responses.HTMLHandler(route.HTMLHandler), middlewareHandlers))
 				} else {
-					mux.Handle(method+" "+route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+					mux.Handle(method+" "+route.Path, handle(responses.HTMLHandler(route.HTMLHandler), middlewareHandlers))
 				}
 			}
 		} else {
-			mux.Handle(route.Path, handle(responses.HTMLHandler(route.Handler), middlewareHandlers))
+			mux.Handle(route.Path, handle(responses.HTMLHandler(route.HTMLHandler), middlewareHandlers))
 		}
 	}
 

@@ -9,7 +9,7 @@ func TestRoute(t *testing.T) {
 	route := Route{
 		Path:    "/example",
 		Methods: []string{"GET"},
-		Handler: func(w http.ResponseWriter, r *http.Request) string {
+		HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 			return "Hello, World!"
 		},
 		Middlewares: []Middleware{},
@@ -27,7 +27,7 @@ func TestRoute(t *testing.T) {
 		t.Errorf("Expected method to be 'GET', got '%s'", route.Methods[0])
 	}
 
-	if route.Handler == nil {
+	if route.HTMLHandler == nil {
 		t.Error("Expected handler to be non-nil")
 	}
 

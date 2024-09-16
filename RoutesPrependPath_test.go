@@ -9,13 +9,13 @@ func TestRoutesPrependPath(t *testing.T) {
 	routes := []Route{
 		{
 			Path: "/route1",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello, World 1!"
 			},
 		},
 		{
 			Path: "/route2",
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
+			HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
 				return "Hello, World 2!"
 			},
 		},

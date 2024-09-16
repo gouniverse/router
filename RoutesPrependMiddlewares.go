@@ -9,9 +9,9 @@ package router
 //
 // Returns:
 // - A slice of Route structs with the updated Middlewares field.
-func RoutesPrependMiddlewares(routes []Route, middlewares []Middleware) []Route {
+func RoutesPrependMiddlewares(routes []RouteInterface, middlewares []Middleware) []RouteInterface {
 	for index := range routes {
-		routes[index].Middlewares = append(middlewares, routes[index].Middlewares...)
+		routes[index].PrependMiddlewares(middlewares...)
 	}
 
 	return routes
