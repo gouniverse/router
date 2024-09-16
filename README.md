@@ -71,40 +71,40 @@ checkUserAuthenticatedMiddleware := Middleware{
     Handler: middleware.CheckUserAuthenticated,
 }
 
-routes = []router.Route{
+routes = []router.RouteInterface{
     // Example of simple "Hello world" endpoint
-    {
+    &router.Route{
         Name: "Home",
         Path: "/",
-        Handler: func(w http.ResponseWriter, r *http.Request) string {
+        HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
             return "Hello world"
         },
     },
     // Example of POST route
-    {
+    &router.Route{
         Name: "Submit Form",
         Path: "/form-submit",
         Methods: []string{http.MethodPost],
-        Handler: func(w http.ResponseWriter, r *http.Request) string {
-            return "Form submitted"
+        JSONHandler: func(w http.ResponseWriter, r *http.Request) string {
+            return api.Success("Form submitted")
         },
     },
     // Example of route with local middlewares
-    {
+    &router.Route{
         Name: "User Dashboard",
         Path: "/user/dashboard",
         Middlewares: []Middleware{
 			checkUserAuthenticatedMiddleware,
         },
-        Handler: func(w http.ResponseWriter, r *http.Request) string {
+        HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
             return "Welcome to your dashboard"
         },
     },
     // Catch-all endpoint
-    {
+    &router.Route{
         Name: "Catch All. Page Not Found",
         Path: "/*",
-        Handler: func(w http.ResponseWriter, r *http.Request) string {
+        HTMLHandler: func(w http.ResponseWriter, r *http.Request) string {
             return "Page not found"
         },
     },
@@ -141,7 +141,7 @@ globalMiddlewares = append(globalMiddlewares, router.Middleware{
 })
 
 // 2. Prepare your routes
-routes := []router.Route{}
+routes := []router.RouteInterface{}
 routes = append(routes, adminControllers.Routes()...)
 routes = append(routes, userControllers.Routes()...)
 routes = append(routes, websiteControllers.Routes()...)
@@ -177,4 +177,40 @@ the beginning and will be called first, before the ones already defined
 router.RoutesPrependMiddlewares(userRouters, []func(http.Handler) http.Handler{
     middleware.CheckUserAuthenticated,
 })
+```
+
+## Using HTML Controllers
+
+```go
+type homeController struct{}
+
+var _ router.HTMLControllerInterface = (*homeController)(nil)
+
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
+	return "Hello world"
+}
+```
+
+## Using JSON Controllers
+
+```go
+type homeController struct{}
+
+var _ router.JSONControllerInterface = (*homeController)(nil)
+
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
+    return api.Success("Hello world")
+}
+```
+
+## Using Idiomatic Controllers
+
+```go
+type homeController struct{}
+
+var _ router.ControllerInterface = (*homeController)(nil)
+
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("Hello world"))
+}
 ```
