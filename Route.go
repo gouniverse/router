@@ -8,10 +8,15 @@ import (
 
 type RouteInterface interface {
 	GetHandler() func(w http.ResponseWriter, r *http.Request)
+	SetHandler(handler func(w http.ResponseWriter, r *http.Request))
 	GetName() string
+	SetName(name string)
 	GetMethods() []string
+	SetMethods(methods []string)
 	GetMiddlewares() []Middleware
+	SetMiddlewares(middlewares []Middleware)
 	GetPath() string
+	SetPath(path string)
 
 	AddMiddlewares(middlewares ...Middleware)
 	PrependMiddlewares(middlewares ...Middleware)
@@ -54,8 +59,16 @@ func (route Route) GetHandler() func(w http.ResponseWriter, r *http.Request) {
 	return nil
 }
 
+func (route *Route) SetHandler(handler func(w http.ResponseWriter, r *http.Request)) {
+	route.Handler = handler
+}
+
 func (route *Route) GetName() string {
 	return route.Name
+}
+
+func (route *Route) SetName(name string) {
+	route.Name = name
 }
 
 func (route *Route) GetMethods() []string {
@@ -84,12 +97,24 @@ func (route *Route) GetMethods() []string {
 	return route.Methods
 }
 
+func (route *Route) SetMethods(methods []string) {
+	route.Methods = methods
+}
+
 func (route Route) GetMiddlewares() []Middleware {
 	return route.Middlewares
 }
 
+func (route *Route) SetMiddlewares(middlewares []Middleware) {
+	route.Middlewares = middlewares
+}
+
 func (route *Route) GetPath() string {
 	return route.Path
+}
+
+func (route *Route) SetPath(path string) {
+	route.Path = path
 }
 
 func (route *Route) AddMiddlewares(middlewares ...Middleware) {

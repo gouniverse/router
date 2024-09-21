@@ -9,10 +9,10 @@ package router
 //
 // Returns:
 // - a slice of Route structs with the updated paths.
-func RoutesPrependPath(routes []Route, path string) []Route {
+func RoutesPrependPath(routes []RouteInterface, path string) []RouteInterface {
 	for index, route := range routes {
-		path := path + route.Path
-		routes[index].Path = path
+		path := path + route.GetPath()
+		routes[index].SetPath(path)
 	}
 
 	return routes
