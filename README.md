@@ -179,7 +179,39 @@ router.RoutesPrependMiddlewares(userRouters, []func(http.Handler) http.Handler{
 })
 ```
 
-## Using HTML Controllers
+
+
+## Using Controllers
+
+The MVC paradigm is quite popular in software development. This router supports easily supports controllers
+
+```go
+routes = []router.RouteInterface{
+    // Example of an HTML controller
+    &router.Route{
+        Name: "HTML Endpoint",
+        Path: "/html-endpoint",
+        HTMLHandler: (&htmlController{}).Handler,
+    },
+    // Example of a JSON controller
+    &router.Route{
+        Name: "JSON Endpoint",
+        Path: "/",
+        JSONHandler: (&jsonController{}).Handler,
+    },
+    // Example of an HTML controller
+    &router.Route{
+        Name: "Idiomatic Endpoint",
+        Path: "/",
+        HTMLHandler: (&idiomaticController{}).Handler,
+    },
+}
+```
+
+- Definition of a HTML Controller
+
+The HTML controller extends the HTMLControllerInterface.
+The Handler method of this controller, returns an HTML string.
 
 ```go
 type homeController struct{}
@@ -191,7 +223,10 @@ func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request
 }
 ```
 
-## Using JSON Controllers
+- Definition of a JSON Controller
+
+The JSON controller extends the JSONControllerInterface.
+The Handler method of this controller returns a JSON string
 
 ```go
 type homeController struct{}
@@ -203,7 +238,10 @@ func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request
 }
 ```
 
-## Using Idiomatic Controllers
+- Definition of an Idiomatic Controller
+
+The idiomatic controller extends the ControllerInterface.
+The Handler method is a standard Go handler, which does not return anything.
 
 ```go
 type homeController struct{}
