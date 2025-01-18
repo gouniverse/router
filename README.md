@@ -122,14 +122,14 @@ globalMiddlewares := []Middleware{
     NewRedirectSlashesMiddleware(),
     NewTimeoutMiddleware(30),
     NewLimitByIpMiddleware(20, 1),       // 20 req per second
-	NewLimitByIpMiddleware(180, 60),     // 180 req per minute
-	NewLimitByIpMiddleware(12000, 3600), // 12000 req hour
+    NewLimitByIpMiddleware(180, 60),     // 180 req per minute
+    NewLimitByIpMiddleware(12000, 3600), // 12000 req hour
 }
 
 // 1.1. Example skipping middlewares while testing
 if config.AppEnvironment != config.APP_ENVIRONMENT_TESTING {
-	globalMiddlewares = append(globalMiddlewares, NewLoggerMiddleware())
-	globalMiddlewares = append(globalMiddlewares, NewRecovererMiddleware())
+    globalMiddlewares = append(globalMiddlewares, NewLoggerMiddleware())
+    globalMiddlewares = append(globalMiddlewares, NewRecovererMiddleware())
 }
 
 // 1.2. Example of declaring custom middleware (on the fly)
@@ -183,7 +183,9 @@ router.RoutesPrependMiddlewares(userRouters, []func(http.Handler) http.Handler{
 
 ## Using Controllers
 
-The MVC paradigm is quite popular in software development. This router supports easily supports controllers
+The MVC paradigm is quite popular in software development especially once applications become larger.
+
+This router easily supports MVC style controllers.
 
 ```go
 routes = []router.RouteInterface{
@@ -196,7 +198,7 @@ routes = []router.RouteInterface{
     // Example of a JSON controller
     &router.Route{
         Name: "JSON Endpoint",
-        Path: "/",
+        Path: "/json-endpoint",
         JSONHandler: (&jsonController{}).Handler,
     },
     // Example of an HTML controller
