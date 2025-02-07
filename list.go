@@ -6,6 +6,8 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
+// List lists the routes and middlewares and prints them to the console
+// in a table format for easy preview
 func List(globalMiddlewares []Middleware, routes []RouteInterface) {
 	tableRouteRows := []table.Row{}
 	for index, route := range routes {
